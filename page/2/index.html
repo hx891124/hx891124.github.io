@@ -7,20 +7,18 @@
   
   
   
-  <title>你不知道的js | study-blog</title>
+  <title>study-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="js学习">
-<meta name="keywords" content="js,你不知道的js">
-<meta property="og:type" content="article">
-<meta property="og:title" content="你不知道的js">
-<meta property="og:url" content="http://hx891124@github.com/2019/09/01/你不知道的js/index.html">
+  <meta name="description" content="a blog for study">
+<meta property="og:type" content="website">
+<meta property="og:title" content="study-blog">
+<meta property="og:url" content="http://hx891124@github.com/page/2/index.html">
 <meta property="og:site_name" content="study-blog">
-<meta property="og:description" content="js学习">
+<meta property="og:description" content="a blog for study">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-01T13:58:21.290Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="你不知道的js">
-<meta name="twitter:description" content="js学习">
+<meta name="twitter:title" content="study-blog">
+<meta name="twitter:description" content="a blog for study">
   
     <link rel="alternative" href="/atom.xml" title="study-blog" type="application/atom+xml">
   
@@ -34,6 +32,9 @@
   <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   
+    
+    
+  
   
       <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
   
@@ -44,8 +45,8 @@
       var yiliaConfig = {
           fancybox: true,
           animate: true,
-          isHome: false,
-          isPost: true,
+          isHome: true,
+          isPost: false,
           isArchive: false,
           isTag: false,
           isCategory: false,
@@ -281,11 +282,13 @@
         </header>
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-你不知道的js" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap">
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a  href="/2019/09/01/你不知道的js/" class="article-date">
-      <time datetime="2019-09-01T10:06:49.000Z" itemprop="datePublished">2019-09-01</time>
+      <a  href="/2019/08/29/hello-world/" class="article-date">
+      <time datetime="2019-08-29T13:54:51.000Z" itemprop="datePublished">2019-08-29</time>
 </a>
 
     </div>
@@ -298,207 +301,60 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      你不知道的js
+    <h1 itemprop="name">
+      <a  class="article-title" href="/2019/08/29/hello-world/">How to use hexo debloy blog</a>
     </h1>
   
 
 
       </header>
       
-      <div class="article-info article-info-post">
-        
-
-        
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/js/">js</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/你不知道的js/">你不知道的js</a></li></ul>
-    </div>
-
-        <div class="clearfix"></div>
-      </div>
-      
     
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="编译型语言的解析过程"><a href="#编译型语言的解析过程" class="headerlink" title="编译型语言的解析过程"></a>编译型语言的解析过程</h3><ol>
-<li><p>分词/词法分析 由字符组成的字符串分解成由意义的代码块，这些代码块被称为词法单元。</p>
-</li>
-<li><p>解析/语法分析 将词法单元流组成一个由元素逐级嵌套所组成的代表程序语法的树。这个数叫做 AST,抽象语法树</p>
-</li>
-<li><p>代码生成 将 AST 转换成可执行代码的过程。即将 AST 转换成机器可以识别的二进制代码的过程。</p>
-</li>
-</ol>
-<blockquote>
-<p>作用域就是一套规则，这套规则用来管理引擎如何在当前作用域及其嵌套的子作用域中根据标识符进行变量查找</p>
-</blockquote>
-<h4 id="词法作用域欺骗"><a href="#词法作用域欺骗" class="headerlink" title="词法作用域欺骗"></a>词法作用域欺骗</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">str,b</span>)</span>&#123;</span><br><span class="line">  <span class="built_in">eval</span>(str),</span><br><span class="line">  <span class="built_in">console</span>.log(a,b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">foo(<span class="string">"var a =3 "</span>,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">//  3,5</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>函数作用域的含义是，属于这个函数的全部变量可以在整个函数使用范围内使用及复用</p>
-</blockquote>
+              hexo 引导操作
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
 
       
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/hexo/">hexo</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a   href="/2019/08/29/hello-world/#more">查看更多 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
     </div>
     
   </div>
   
-    
-    <div class="copyright">
-        <p><span>本文标题:</span><a  href="/2019/09/01/你不知道的js/">你不知道的js</a></p>
-        <p><span>文章作者:</span><a  href="/" title="访问 Star Huang 的个人博客">Star Huang</a></p>
-        <p><span>发布时间:</span>2019年09月01日 - 18时06分</p>
-        <p><span>最后更新:</span>2019年09月01日 - 21时58分</p>
-        <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/09/01/你不知道的js/" title="你不知道的js">http://hx891124@github.com/2019/09/01/你不知道的js/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://hx891124@github.com/2019/09/01/你不知道的js/　　作者: Star Huang" title=""></span>
-        </p>
-        <p>
-            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
-        </p>
-    </div>
-
-
-
-<nav id="article-nav">
-  
-    <a  href="/2019/09/08/重学前端-html/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          重学前端-html
-        
-      </div>
-    </a>
-  
-  
-    <a  href="/2019/08/29/md语法/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">md语法</div>
-      <strong class="article-nav-caption">></strong>
-    </a>
-  
-</nav>
-
-
-  
 </article>
 
-    <div id="toc" class="toc-article">
-    <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#编译型语言的解析过程"><span class="toc-number">1.</span> <span class="toc-text">编译型语言的解析过程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#词法作用域欺骗"><span class="toc-number">1.1.</span> <span class="toc-text">词法作用域欺骗</span></a></li></ol></li></ol>
-</div>
-<style>
-    .left-col .switch-btn {
-        display: none;
-    }
-    .left-col .switch-area {
-        display: none;
-    }
-</style>
-<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
-
-<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
-
-<script>
-    var valueHide = "隐藏目录";
-    var valueShow = "显示目录";
-    if ($(".left-col").is(":hidden")) {
-        $("#tocButton").attr("value", valueShow);
-    }
-    $("#tocButton").click(function() {
-        if ($("#toc").is(":hidden")) {
-            $("#tocButton").attr("value", valueHide);
-            $("#toc").slideDown(320);
-            $(".switch-btn, .switch-area").fadeOut(300);
-        }
-        else {
-            $("#tocButton").attr("value", valueShow);
-            $("#toc").slideUp(350);
-            $(".switch-btn, .switch-area").fadeIn(500);
-        }
-    })
-    if ($(".toc").length < 1) {
-        $("#toc, #tocButton").hide();
-        $(".switch-btn, .switch-area").show();
-    }
-</script>
 
 
 
 
-<div class="bdsharebuttonbox">
-	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
-	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
-	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
-	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
-	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
-	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
-	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
-</div>
-<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
 
 
 
 
-    
-        <section class="changyan" id="comments">
-  <!--<div id="uyan_frame"></div>-->
-  <div id="SOHUCS"></div>
-  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
-  <script type="text/javascript">
-    window.changyan.api.config({
-      appid: 'xxxx',
-      conf: 'xxxxxxxxx'
-    });
-  </script>
-</section>
-    
 
 
-
-    <div class="scroll" id="post-nav-button">
-        
-            <a  href="/2019/09/08/重学前端-html/" title="上一篇: 重学前端-html">
-                <i class="fa fa-angle-left"></i>
-            </a>
-        
-        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
-        
-            <a  href="/2019/08/29/md语法/" title="下一篇: md语法">
-                <i class="fa fa-angle-right"></i>
-            </a>
-        
-    </div>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/09/19/前端基础知识梳理-下/">前端基础知识梳理(下)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/19/前端基础知识梳理-上/">前端基础知识梳理(上)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/10/前端切图命令/">前端切图命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/webpack-总结/">webpack-总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/重学前端-vue/">重学前端-vue</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/重学前端-js/">重学前端-js</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/重学前端-css/">重学前端-css</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/重学前端-html/">重学前端-html</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/01/你不知道的js/">你不知道的js</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/29/md语法/">md语法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/29/hello-world/">How to use hexo debloy blog</a></li></ul>
-    
-<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
-
-    <script>
-        $(".post-list").addClass("toc-article");
-        // $(".post-list-item a").attr("target","_blank");
-        $("#post-nav-button > a:nth-child(2)").click(function() {
-            $(".fa-bars, .fa-times").toggle();
-            $(".post-list").toggle(300);
-            if ($(".toc").length > 0) {
-                $("#toc, #tocButton").toggle(200, function() {
-                    if ($(".switch-area").is(":visible")) {
-                        $("#toc, .switch-btn, .switch-area").toggle();
-                        $("#tocButton").attr("value", valueHide);
-                        }
-                    })
-            }
-            else {
-                $(".switch-btn, .switch-area").fadeToggle(300);
-            }
-        })
-    </script>
-
-
-
-
-    <script>
-        
-    </script>
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
+  
 
 </div>
       <footer id="footer">
