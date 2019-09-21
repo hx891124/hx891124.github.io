@@ -7,22 +7,20 @@
   
   
   
-  <title>重学前端-css | study-blog</title>
+  <title>正则表达式 | study-blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="css复习总结">
-<meta name="keywords" content="css">
+  <meta name="description" content="正则的基础学习">
+<meta name="keywords" content="正则">
 <meta property="og:type" content="article">
-<meta property="og:title" content="重学前端-css">
-<meta property="og:url" content="http://hx891124@github.com/2019/09/08/重学前端-css/index.html">
+<meta property="og:title" content="正则表达式">
+<meta property="og:url" content="http://hx891124@github.com/2019/09/19/正则表达式/index.html">
 <meta property="og:site_name" content="study-blog">
-<meta property="og:description" content="css复习总结">
+<meta property="og:description" content="正则的基础学习">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="https://img2018.cnblogs.com/blog/1663326/201907/1663326-20190711210554533-1942891732.png">
-<meta property="og:updated_time" content="2019-09-08T13:44:10.133Z">
+<meta property="og:updated_time" content="2019-09-19T14:19:19.996Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="重学前端-css">
-<meta name="twitter:description" content="css复习总结">
-<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/1663326/201907/1663326-20190711210554533-1942891732.png">
+<meta name="twitter:title" content="正则表达式">
+<meta name="twitter:description" content="正则的基础学习">
   
     <link rel="alternative" href="/atom.xml" title="study-blog" type="application/atom+xml">
   
@@ -283,11 +281,11 @@
         </header>
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-重学前端-css" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-正则表达式" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a  href="/2019/09/08/重学前端-css/" class="article-date">
-      <time datetime="2019-09-08T13:11:36.000Z" itemprop="datePublished">2019-09-08</time>
+      <a  href="/2019/09/19/正则表达式/" class="article-date">
+      <time datetime="2019-09-19T13:38:27.000Z" itemprop="datePublished">2019-09-19</time>
 </a>
 
     </div>
@@ -301,7 +299,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      重学前端-css
+      正则表达式
     </h1>
   
 
@@ -313,7 +311,7 @@
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/css/">css</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/正则/">正则</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -323,7 +321,44 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h4 id="css-思维导图"><a href="#css-思维导图" class="headerlink" title="css 思维导图"></a>css 思维导图</h4><p><img src="https://img2018.cnblogs.com/blog/1663326/201907/1663326-20190711210554533-1942891732.png" alt="css思维导图"></p>
+        <p>正则表达式常用的方法分为 2 类：</p>
+<ol>
+<li>字符串上调用，进行正则规则匹配。操作对象是正则表达式</li>
+<li>正则表达式上调用。操作对象是字符串。</li>
+</ol>
+<p>准备了下面代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> pattern = <span class="regexp">/runoob/gi</span>; <span class="comment">// 正则表达式</span></span><br><span class="line"><span class="keyword">const</span> str = <span class="string">"Visit Runoob!runoob"</span>; <span class="comment">// 待匹配字符串</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="①-字符串上调用的方法"><a href="#①-字符串上调用的方法" class="headerlink" title="① 字符串上调用的方法"></a>① 字符串上调用的方法</h4><p>常见的有：search/ match / replace</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Return: Number 代表搜索到的开始地址</span></span><br><span class="line">console.<span class="built_in">log</span>(<span class="built_in">str</span>.<span class="built_in">search</span>(/Runoob/i));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Return: Array 匹配出来的所有字符串</span></span><br><span class="line">console.<span class="built_in">log</span>(<span class="built_in">str</span>.match(/run/gi));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Return: 新的string对象</span></span><br><span class="line">console.<span class="built_in">log</span>(<span class="built_in">str</span>.replace(/visit/i, <span class="string">"visit"</span>));</span><br></pre></td></tr></table></figure>
+
+<h4 id="②-正则表达式对象上的方法"><a href="#②-正则表达式对象上的方法" class="headerlink" title="② 正则表达式对象上的方法"></a>② 正则表达式对象上的方法</h4><p>常见的有：test / exec</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Return: Boolean 代表是否符合匹配</span></span><br><span class="line">console.<span class="built_in">log</span>(pattern.test(<span class="built_in">str</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// Return: 找到第一个匹配的值，返回一个数组，存放着匹配信息</span></span><br><span class="line">console.<span class="built_in">log</span>(pattern.<span class="built_in">exec</span>(<span class="built_in">str</span>));</span><br></pre></td></tr></table></figure>
+
+<h4 id="实现千分位标注"><a href="#实现千分位标注" class="headerlink" title="实现千分位标注"></a>实现千分位标注</h4><blockquote>
+<p>题目：实现千分位标注位，考虑小数、负数和整数三种情况。</p>
+</blockquote>
+<p>sep 参数是自定义的分隔符，默认是,</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 实现千分位标注位</span></span><br><span class="line"><span class="comment">* @param &#123;*&#125; str 待标注的字符串</span></span><br><span class="line"><span class="comment">* @param &#123;*&#125; sep 标注符号</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">const</span> addSeparator = <span class="function">(<span class="params">str = <span class="string">""</span>, sep = <span class="string">","</span></span>) =&gt;</span> &#123;</span><br><span class="line">  str += <span class="string">""</span>;</span><br><span class="line">  <span class="keyword">const</span> arr = str.split(<span class="string">"."</span>),</span><br><span class="line">    re = <span class="regexp">/(\d+)(\d&#123;3&#125;)/</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> integer = arr[<span class="number">0</span>],</span><br><span class="line">    decimal = arr.length &lt;= <span class="number">1</span> ? <span class="string">""</span> : <span class="string">`.<span class="subst">$&#123;arr[<span class="number">1</span>]&#125;</span>`</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (re.test(integer)) &#123;</span><br><span class="line">    integer = integer.replace(re, <span class="string">"$1"</span> + sep + <span class="string">"$2"</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> integer + decimal;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(addSeparator(<span class="number">-10000.23</span>)); <span class="comment">// -10,000.23</span></span><br><span class="line"><span class="built_in">console</span>.log(addSeparator(<span class="number">100</span>)); <span class="comment">// 100</span></span><br><span class="line"><span class="built_in">console</span>.log(addSeparator(<span class="number">1234</span>, <span class="string">";"</span>)); <span class="comment">// 1;234</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="全局匹配与-lastIndex"><a href="#全局匹配与-lastIndex" class="headerlink" title="全局匹配与 lastIndex"></a>全局匹配与 lastIndex</h4><blockquote>
+<p>题目：请说出下面代码执行结果（为了方便，我将结果注释在代码中了），并且解释。</p>
+</blockquote>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="built_in">str</span> = <span class="string">"google"</span>;</span><br><span class="line"><span class="keyword">const</span> re = /o/g;</span><br><span class="line">console.<span class="built_in">log</span>(re.test(<span class="built_in">str</span>)); <span class="comment">// true</span></span><br><span class="line">console.<span class="built_in">log</span>(re.test(<span class="built_in">str</span>)); <span class="comment">// true</span></span><br><span class="line">console.<span class="built_in">log</span>(re.test(<span class="built_in">str</span>)); <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>由于使用的是全局匹配，因此会多出来 lastIndex 这个属性，打印如下：</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="built_in">str</span> = <span class="string">"google"</span>;</span><br><span class="line"><span class="keyword">const</span> re = /o/g;</span><br><span class="line">console.<span class="built_in">log</span>(re.test(<span class="built_in">str</span>), re.lastIndex); <span class="comment">// true 2</span></span><br><span class="line">console.<span class="built_in">log</span>(re.test(<span class="built_in">str</span>), re.lastIndex); <span class="comment">// true 3</span></span><br><span class="line">console.<span class="built_in">log</span>(re.test(<span class="built_in">str</span>), re.lastIndex); <span class="comment">// false 0</span></span><br></pre></td></tr></table></figure>
+
+<p>简单理解就是：同一个全局匹配的正则对同一个目标串匹配后，匹配过的部分串将不再匹配。</p>
+<h4 id="字符串第一个出现一次的字符"><a href="#字符串第一个出现一次的字符" class="headerlink" title="字符串第一个出现一次的字符"></a>字符串第一个出现一次的字符</h4><blockquote>
+<p>题目：字符串中第一个出现一次的字符</p>
+</blockquote>
+<p>利用字符串的 match 方法匹配指定字符：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">const</span> find_ch = <span class="function"><span class="params">str</span> =&gt;</span> &#123;</span><br><span class="line"> <span class="keyword">for</span> (<span class="keyword">let</span> ch <span class="keyword">of</span> str) &#123;</span><br><span class="line">     <span class="keyword">const</span> re = <span class="keyword">new</span> <span class="built_in">RegExp</span>(ch, <span class="string">"g"</span>);</span><br><span class="line">     <span class="comment">// 检查每个字符的匹配数量</span></span><br><span class="line">     <span class="keyword">if</span> (str.match(re).length === <span class="number">1</span>) &#123;</span><br><span class="line">       <span class="keyword">return</span> ch;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> <span class="comment">// 输出答案是 l</span></span><br><span class="line"> <span class="built_in">console</span>.log(find_ch(<span class="string">"google"</span>));</span><br></pre></td></tr></table></figure>
+
+<p>除了上述方法，使用 indexOf/lastIndexOf 同样可以：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> find_ch = <span class="function"><span class="params">str</span> =&gt;</span> &#123;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> ch <span class="keyword">of</span> str) &#123;</span><br><span class="line">    <span class="keyword">if</span> (str.indexOf(ch) === str.lastIndexOf(ch)) &#123;</span><br><span class="line">      <span class="keyword">return</span> ch;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 输出答案是 l</span></span><br><span class="line"><span class="built_in">console</span>.log(find_ch(<span class="string">"google"</span>));</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -332,13 +367,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a  href="/2019/09/08/重学前端-css/">重学前端-css</a></p>
+        <p><span>本文标题:</span><a  href="/2019/09/19/正则表达式/">正则表达式</a></p>
         <p><span>文章作者:</span><a  href="/" title="访问 Star Huang 的个人博客">Star Huang</a></p>
-        <p><span>发布时间:</span>2019年09月08日 - 21时11分</p>
-        <p><span>最后更新:</span>2019年09月08日 - 21时44分</p>
+        <p><span>发布时间:</span>2019年09月19日 - 21时38分</p>
+        <p><span>最后更新:</span>2019年09月19日 - 22时19分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/09/08/重学前端-css/" title="重学前端-css">http://hx891124@github.com/2019/09/08/重学前端-css/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://hx891124@github.com/2019/09/08/重学前端-css/　　作者: Star Huang" title=""></span>
+            <span>原始链接:</span><a class="post-url" href="/2019/09/19/正则表达式/" title="正则表达式">http://hx891124@github.com/2019/09/19/正则表达式/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://hx891124@github.com/2019/09/19/正则表达式/　　作者: Star Huang" title=""></span>
         </p>
         <p>
             <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
@@ -349,18 +384,18 @@
 
 <nav id="article-nav">
   
-    <a  href="/2019/09/08/重学前端-js/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a  href="/2019/09/21/前端面试中常考的源码实现/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          重学前端-js
+          前端面试中常考的源码实现
         
       </div>
     </a>
   
   
-    <a  href="/2019/09/08/重学前端-html/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">重学前端-html</div>
+    <a  href="/2019/09/19/前端基础知识梳理-下/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">前端基础知识梳理(下)</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -372,7 +407,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#css-思维导图"><span class="toc-number">1.</span> <span class="toc-text">css 思维导图</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#①-字符串上调用的方法"><span class="toc-number">1.</span> <span class="toc-text">① 字符串上调用的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#②-正则表达式对象上的方法"><span class="toc-number">2.</span> <span class="toc-text">② 正则表达式对象上的方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#实现千分位标注"><span class="toc-number">3.</span> <span class="toc-text">实现千分位标注</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全局匹配与-lastIndex"><span class="toc-number">4.</span> <span class="toc-text">全局匹配与 lastIndex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#字符串第一个出现一次的字符"><span class="toc-number">5.</span> <span class="toc-text">字符串第一个出现一次的字符</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -445,13 +480,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a  href="/2019/09/08/重学前端-js/" title="上一篇: 重学前端-js">
+            <a  href="/2019/09/21/前端面试中常考的源码实现/" title="上一篇: 前端面试中常考的源码实现">
                 <i class="fa fa-angle-left"></i>
             </a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a  href="/2019/09/08/重学前端-html/" title="下一篇: 重学前端-html">
+            <a  href="/2019/09/19/前端基础知识梳理-下/" title="下一篇: 前端基础知识梳理(下)">
                 <i class="fa fa-angle-right"></i>
             </a>
         
