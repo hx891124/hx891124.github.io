@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl">
+  
+  
+  
+  
+  <title>canvas离屏技术和放大镜实现 | study-blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="canvas 离屏技术与放大镜实现">
+<meta name="keywords" content="canvas,放大镜">
+<meta property="og:type" content="article">
+<meta property="og:title" content="canvas离屏技术和放大镜实现">
+<meta property="og:url" content="http://hx891124@github.com/2019/09/26/canvas离屏技术和放大镜实现/index.html">
+<meta property="og:site_name" content="study-blog">
+<meta property="og:description" content="canvas 离屏技术与放大镜实现">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-09-26T14:26:28.081Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="canvas离屏技术和放大镜实现">
+<meta name="twitter:description" content="canvas 离屏技术与放大镜实现">
+  
+    <link rel="alternative" href="/atom.xml" title="study-blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet">
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head></html>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.png" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">Star Huang</a></h1>
+        </hgroup>
+        
+        <p class="header-subtitle">front-end</p>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/开发工具/">玩转开发工具</a></li>
+                        
+                            <li><a  href="/categories/digital">玩转数码</a></li>
+                        
+                            <li><a  href="/categories/algorithm">算法学习</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                            <li><a  href="/tags">静心阅读</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="/xxxxx" title="github">github</a>
+                            
+                                <a class="fl weibo"  target="_blank" href="/xxxxxxxx" title="weibo">weibo</a>
+                            
+                                <a class="fl rss"  target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/ES6/" style="font-size: 10px;">ES6</a> <a href="/tags/canvas/" style="font-size: 15px;">canvas</a> <a href="/tags/css/" style="font-size: 10px;">css</a> <a href="/tags/file/" style="font-size: 10px;">file</a> <a href="/tags/front-end/" style="font-size: 10px;">front-end</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/html/" style="font-size: 10px;">html</a> <a href="/tags/javascript/" style="font-size: 15px;">javascript</a> <a href="/tags/js/" style="font-size: 20px;">js</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/serviceWorker/" style="font-size: 10px;">serviceWorker</a> <a href="/tags/ts/" style="font-size: 10px;">ts</a> <a href="/tags/vue/" style="font-size: 10px;">vue</a> <a href="/tags/webpack/" style="font-size: 10px;">webpack</a> <a href="/tags/websocket/" style="font-size: 10px;">websocket</a> <a href="/tags/你不知道的js/" style="font-size: 10px;">你不知道的js</a> <a href="/tags/切图/" style="font-size: 10px;">切图</a> <a href="/tags/学习经验/" style="font-size: 10px;">学习经验</a> <a href="/tags/实战/" style="font-size: 10px;">实战</a> <a href="/tags/打包工具/" style="font-size: 10px;">打包工具</a> <a href="/tags/放大镜/" style="font-size: 10px;">放大镜</a> <a href="/tags/文件/" style="font-size: 10px;">文件</a> <a href="/tags/正则/" style="font-size: 10px;">正则</a> <a href="/tags/滤镜/" style="font-size: 10px;">滤镜</a> <a href="/tags/群聊/" style="font-size: 10px;">群聊</a> <a href="/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/tags/高程三/" style="font-size: 10px;">高程三</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://blog.csdn.net/baidu_21483933">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/blog/maocg_web">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="http://www.jianshu.com/users/eb37ef89c746/latest_articles">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">爱动漫,爱游戏,爱编程,爱运动,爱的太多了!</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">Star Huang</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.png" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">Star Huang</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">front-end</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/开发工具/">玩转开发工具</a></li>
+                
+                    <li><a href="/categories/digital">玩转数码</a></li>
+                
+                    <li><a href="/categories/algorithm">算法学习</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                    <li><a href="/tags">静心阅读</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="/xxxxx" title="github">github</a>
+                    
+                        <a class="weibo" target="_blank" href="/xxxxxxxx" title="weibo">weibo</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-canvas离屏技术和放大镜实现" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2019/09/26/canvas离屏技术和放大镜实现/" class="article-date">
+      <time datetime="2019-09-26T14:23:00.000Z" itemprop="datePublished">2019-09-26</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      canvas离屏技术和放大镜实现
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/canvas/">canvas</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/放大镜/">放大镜</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>利用 canvas 除了可以实现滤镜，还可以利用离屏技术放大镜功能。</p>
+</blockquote>
+<p>为了方便讲解，本文分为 2 个应用部分：</p>
+<ol>
+<li>实现水印和中心缩放</li>
+<li>实现放大镜</li>
+</ol>
+<h4 id="1-什么是离屏技术？"><a href="#1-什么是离屏技术？" class="headerlink" title="1. 什么是离屏技术？"></a>1. 什么是离屏技术？</h4><p>canvas 学习和滤镜实现介绍过 drawImage 接口。除了绘制图像，这个接口还可以：将一个 canvas 对象绘制到另一个 canvas 对象上。这就是离屏技术</p>
+<h4 id="2-实现水印和中心缩放"><a href="#2-实现水印和中心缩放" class="headerlink" title="2. 实现水印和中心缩放"></a>2. 实现水印和中心缩放</h4><p>在代码中，有两个 canvas 标签。分别是可见与不可见。不可见的 canvas 对象上的 Context 对象，就是我们放置图像水印的地方。</p>
+<p>更多详解，请看代码注释：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line">  <span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Learn Canvas<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line">      canvas &#123;</span><br><span class="line">        display: block;</span><br><span class="line">        margin: 0 auto;</span><br><span class="line"><span class="css">        <span class="selector-tag">border</span>: 1<span class="selector-tag">px</span> <span class="selector-tag">solid</span> <span class="selector-id">#222</span>;</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      input &#123;</span><br><span class="line">        display: block;</span><br><span class="line">        margin: 20px auto;</span><br><span class="line">        width: 800px;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"app"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"my-canvas"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"range"</span> <span class="attr">value</span>=<span class="string">"1.0"</span> <span class="attr">min</span>=<span class="string">"0.5"</span> <span class="attr">max</span>=<span class="string">"3.0"</span> <span class="attr">step</span>=<span class="string">"0.1"</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"watermark-canvas"</span> <span class="attr">style</span>=<span class="string">"display: none;"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span></span><br><span class="line"><span class="javascript">      <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> canvas = <span class="built_in">document</span>.querySelector(<span class="string">"#my-canvas"</span>);</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> watermarkCanvas = <span class="built_in">document</span>.querySelector(<span class="string">"#watermark-canvas"</span>);</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> slider = <span class="built_in">document</span>.querySelector(<span class="string">"input"</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> scale = slider.value;</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> ctx = canvas.getContext(<span class="string">"2d"</span>);</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> watermarkCtx = watermarkCanvas.getContext(<span class="string">"2d"</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="comment">/* 给第二个canvas获取的Context对象添加水印 */</span></span></span><br><span class="line">        watermarkCanvas.width = 300;</span><br><span class="line">        watermarkCanvas.height = 100;</span><br><span class="line"><span class="actionscript">        watermarkCtx.font = <span class="string">"bold 20px Arial"</span>;</span></span><br><span class="line"><span class="actionscript">        watermarkCtx.lineWidth = <span class="string">"1"</span>;</span></span><br><span class="line"><span class="actionscript">        watermarkCtx.fillStyle = <span class="string">"rgba(255 , 255 , 255, 0.5)"</span>;</span></span><br><span class="line"><span class="actionscript">        watermarkCtx.fillText(<span class="string">"=== yuanxin.me ==="</span>, <span class="number">50</span>, <span class="number">50</span>);</span></span><br><span class="line"><span class="actionscript">        <span class="comment">/****************************************/</span></span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</span></span><br><span class="line"><span class="actionscript">        img.src = <span class="string">"./img/photo.jpg"</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="comment">/* 加载图片后执行操作 */</span></span></span><br><span class="line"><span class="actionscript">        img.onload = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line">          canvas.width = img.width;</span><br><span class="line">          canvas.height = img.height;</span><br><span class="line">          drawImageByScale(canvas, ctx, img, scale, watermarkCanvas);</span><br><span class="line"><span class="actionscript">          <span class="comment">// 监听input标签的mousemove事件</span></span></span><br><span class="line"><span class="actionscript">          <span class="comment">// 注意：mousemove实时监听值的变化，内存消耗较大</span></span></span><br><span class="line"><span class="actionscript">          slider.onmousemove = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line">            scale = slider.value;</span><br><span class="line">            drawImageByScale(canvas, ctx, img, scale, watermarkCanvas);</span><br><span class="line">          &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line"><span class="actionscript">        <span class="comment">/******************/</span></span></span><br><span class="line">      &#125;;</span><br><span class="line">      /**</span><br><span class="line">       *</span><br><span class="line"><span class="javascript">       * @param &#123;<span class="built_in">Object</span>&#125; canvas 画布对象</span></span><br><span class="line"><span class="javascript">       * @param &#123;<span class="built_in">Object</span>&#125; ctx</span></span><br><span class="line"><span class="javascript">       * @param &#123;<span class="built_in">Object</span>&#125; img</span></span><br><span class="line"><span class="javascript">       * @param &#123;<span class="built_in">Number</span>&#125; scale 缩放比例</span></span><br><span class="line"><span class="javascript">       * @param &#123;<span class="built_in">Object</span>&#125; watermark 水印对象</span></span><br><span class="line">       */</span><br><span class="line"><span class="actionscript">      <span class="function"><span class="keyword">function</span> <span class="title">drawImageByScale</span><span class="params">(canvas, ctx, img, scale, watermark)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="comment">// 图像按照比例进行缩放</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> width = img.width * scale,</span></span><br><span class="line">          height = img.height * scale;</span><br><span class="line"><span class="actionscript">        <span class="comment">// (dx, dy): 画布上绘制img的起始坐标</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> dx = canvas.width / <span class="number">2</span> - width / <span class="number">2</span>,</span></span><br><span class="line">          dy = canvas.height / 2 - height / 2;</span><br><span class="line"><span class="actionscript">        ctx.clearRect(<span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height); <span class="comment">// No1 清空画布</span></span></span><br><span class="line"><span class="actionscript">        ctx.drawImage(img, dx, dy, width, height); <span class="comment">// No2 重新绘制图像</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">if</span> (watermark) &#123;</span></span><br><span class="line"><span class="actionscript">          <span class="comment">// No3 判断是否有水印: 有, 绘制水印</span></span></span><br><span class="line">          ctx.drawImage(</span><br><span class="line">            watermark,</span><br><span class="line">            canvas.width - watermark.width,</span><br><span class="line">            canvas.height - watermark.height</span><br><span class="line">          );</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>拖动滑竿，即可放大和缩小图像。然后右键保存图像。保存后的图像，就有已经有了水印</p>
+<h4 id="3-实现放大镜"><a href="#3-实现放大镜" class="headerlink" title="3. 实现放大镜"></a>3. 实现放大镜</h4><p>在上述中心缩放的基础上，实现放大镜主需要注意以下 2 个部分：</p>
+<ol>
+<li><p>细化处理 canvas 的鼠标响应事件：滑入、滑出、点击和松开</p>
+</li>
+<li><p>重新计算离屏坐标（详细公式计算思路请见代码注释）</p>
+</li>
+<li><p>重新计算鼠标相对于 canvas 标签的坐标（详细公式计算思路请见代码注释）</p>
+<p>代码如下：</p>
+</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line">  <span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">style</span>&gt;</span></span><br><span class="line">      canvas &#123;</span><br><span class="line">        display: block;</span><br><span class="line">        margin: 0 auto;</span><br><span class="line"><span class="css">        <span class="selector-tag">border</span>: 1<span class="selector-tag">px</span> <span class="selector-tag">solid</span> <span class="selector-id">#222</span>;</span></span><br><span class="line">      &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"my-canvas"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">canvas</span> <span class="attr">id</span>=<span class="string">"off-canvas"</span> <span class="attr">style</span>=<span class="string">"display: none;"</span>&gt;</span><span class="tag">&lt;/<span class="name">canvas</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> isMouseDown = <span class="literal">false</span>,</span></span><br><span class="line">        scale = 1.0;</span><br><span class="line"><span class="javascript">      <span class="keyword">var</span> canvas = <span class="built_in">document</span>.querySelector(<span class="string">"#my-canvas"</span>);</span></span><br><span class="line"><span class="javascript">      <span class="keyword">var</span> offCanvas = <span class="built_in">document</span>.querySelector(<span class="string">"#off-canvas"</span>); <span class="comment">// 离屏 canvas</span></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> ctx = canvas.getContext(<span class="string">"2d"</span>);</span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> offCtx = offCanvas.getContext(<span class="string">"2d"</span>); <span class="comment">// 离屏 canvas 的 Context对象</span></span></span><br><span class="line"><span class="actionscript">      <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</span></span><br><span class="line"></span><br><span class="line"><span class="javascript">      <span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span></span><br><span class="line"><span class="actionscript">        img.src = <span class="string">"./img/photo.jpg"</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">        img.onload = <span class="function"><span class="keyword">function</span><span class="params">()</span> </span>&#123;</span></span><br><span class="line">          canvas.width = img.width;</span><br><span class="line">          canvas.height = img.height;</span><br><span class="line"></span><br><span class="line">          offCanvas.width = img.width;</span><br><span class="line">          offCanvas.height = img.height;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">          <span class="comment">// 计算缩放比例</span></span></span><br><span class="line">          scale = offCanvas.width / canvas.width;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">          <span class="comment">// 初识状态下, 两个canvas均绘制Image</span></span></span><br><span class="line">          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);</span><br><span class="line">          offCtx.drawImage(img, 0, 0, canvas.width, canvas.height);</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="comment">// 鼠标按下</span></span></span><br><span class="line"><span class="actionscript">        canvas.onmousedown = <span class="function"><span class="keyword">function</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">          event.preventDefault(); <span class="comment">// 禁用默认事件</span></span></span><br><span class="line"><span class="actionscript">          <span class="keyword">var</span> point = windowToCanvas(event.clientX, event.clientY); <span class="comment">// 获取鼠标相对于 canvas 标签的坐标</span></span></span><br><span class="line"><span class="actionscript">          isMouseDown = <span class="literal">true</span>;</span></span><br><span class="line"><span class="actionscript">          drawCanvasWithMagnifier(<span class="literal">true</span>, point); <span class="comment">// 绘制在离屏canvas上绘制放大后的图像</span></span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="comment">// 鼠标移动</span></span></span><br><span class="line"><span class="actionscript">        canvas.onmousemove = <span class="function"><span class="keyword">function</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">          event.preventDefault(); <span class="comment">// 禁用默认事件</span></span></span><br><span class="line"><span class="actionscript">          <span class="keyword">if</span> (isMouseDown === <span class="literal">true</span>) &#123;</span></span><br><span class="line"><span class="actionscript">            <span class="keyword">var</span> point = windowToCanvas(event.clientX, event.clientY);</span></span><br><span class="line"><span class="actionscript">            drawCanvasWithMagnifier(<span class="literal">true</span>, point);</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="comment">// 鼠标松开</span></span></span><br><span class="line"><span class="actionscript">        canvas.onmouseup = <span class="function"><span class="keyword">function</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">          event.preventDefault(); <span class="comment">// 禁用默认事件</span></span></span><br><span class="line"><span class="actionscript">          isMouseDown = <span class="literal">false</span>;</span></span><br><span class="line"><span class="actionscript">          drawCanvasWithMagnifier(<span class="literal">false</span>); <span class="comment">// 不绘制离屏放大镜</span></span></span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="comment">// 鼠标移出canvas标签</span></span></span><br><span class="line"><span class="actionscript">        canvas.onmouseout = <span class="function"><span class="keyword">function</span><span class="params">(event)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">          event.preventDefault(); <span class="comment">// 禁用默认事件</span></span></span><br><span class="line"><span class="actionscript">          isMouseDown = <span class="literal">false</span>;</span></span><br><span class="line"><span class="actionscript">          drawCanvasWithMagnifier(<span class="literal">false</span>); <span class="comment">// 不绘制离屏放大镜</span></span></span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;;</span><br><span class="line"></span><br><span class="line">      /**</span><br><span class="line">       * 返回鼠标相对于canvas左上角的坐标</span><br><span class="line"><span class="javascript">       * @param &#123;<span class="built_in">Number</span>&#125; x 鼠标的屏幕坐标x</span></span><br><span class="line"><span class="javascript">       * @param &#123;<span class="built_in">Number</span>&#125; y 鼠标的屏幕坐标y</span></span><br><span class="line">       */</span><br><span class="line"><span class="actionscript">      <span class="function"><span class="keyword">function</span> <span class="title">windowToCanvas</span><span class="params">(x, y)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        <span class="keyword">var</span> bbox = canvas.getBoundingClientRect(); <span class="comment">// bbox中存储的是canvas相对于屏幕的坐标</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">return</span> &#123;</span></span><br><span class="line">          x: x - bbox.x,</span><br><span class="line">          y: y - bbox.y</span><br><span class="line">        &#125;;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">      <span class="function"><span class="keyword">function</span> <span class="title">drawCanvasWithMagnifier</span><span class="params">(isShow, point)</span> </span>&#123;</span></span><br><span class="line"><span class="actionscript">        ctx.clearRect(<span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height); <span class="comment">// 清空画布</span></span></span><br><span class="line"><span class="actionscript">        ctx.drawImage(img, <span class="number">0</span>, <span class="number">0</span>, canvas.width, canvas.height); <span class="comment">// 在画布上绘制图像</span></span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">        <span class="comment">/* 利用离屏，绘制放大镜 */</span></span></span><br><span class="line"><span class="actionscript">        <span class="keyword">if</span> (isShow) &#123;</span></span><br><span class="line"><span class="actionscript">          <span class="keyword">var</span> &#123; x, y &#125; = point;</span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">          <span class="keyword">var</span> mr = <span class="number">50</span>; <span class="comment">// 正方形放大镜边长</span></span></span><br><span class="line"></span><br><span class="line"><span class="actionscript">          <span class="comment">// (sx, sy): 待放大图像的开始坐标</span></span></span><br><span class="line"><span class="actionscript">          <span class="keyword">var</span> sx = x - mr / <span class="number">2</span>,</span></span><br><span class="line">            sy = y - mr / 2;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">          <span class="comment">// (dx, dy): 已放大图像的开始坐标</span></span></span><br><span class="line"><span class="actionscript">          <span class="keyword">var</span> dx = x - mr,</span></span><br><span class="line">            dy = y - mr;</span><br><span class="line"></span><br><span class="line"><span class="actionscript">          <span class="comment">// 将offCanvas上的(sx,sy)开始的长宽均为mr的正方形区域</span></span></span><br><span class="line"><span class="actionscript">          <span class="comment">// 放大到</span></span></span><br><span class="line"><span class="actionscript">          <span class="comment">// canvas上的(dx,dy)开始的长宽均为 2 * mr 的正方形可视区域</span></span></span><br><span class="line"><span class="actionscript">          <span class="comment">// 由此实现放大效果</span></span></span><br><span class="line">          ctx.drawImage(offCanvas, sx, sy, mr, mr, dx, dy, 2 * mr, 2 * mr);</span><br><span class="line">        &#125;</span><br><span class="line"><span class="actionscript">        <span class="comment">/*********************/</span></span></span><br><span class="line">      &#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2019/09/26/canvas离屏技术和放大镜实现/">canvas离屏技术和放大镜实现</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 Star Huang 的个人博客">Star Huang</a></p>
+        <p><span>发布时间:</span>2019年09月26日 - 22时23分</p>
+        <p><span>最后更新:</span>2019年09月26日 - 22时26分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/09/26/canvas离屏技术和放大镜实现/" title="canvas离屏技术和放大镜实现">http://hx891124@github.com/2019/09/26/canvas离屏技术和放大镜实现/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://hx891124@github.com/2019/09/26/canvas离屏技术和放大镜实现/　　作者: Star Huang" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2019/09/26/FileAPI文件操作实战/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          FileAPI文件操作实战
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2019/09/26/canvas学习和滤镜实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">canvas学习和滤镜实现</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-什么是离屏技术？"><span class="toc-number">1.</span> <span class="toc-text">1. 什么是离屏技术？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-实现水印和中心缩放"><span class="toc-number">2.</span> <span class="toc-text">2. 实现水印和中心缩放</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-实现放大镜"><span class="toc-number">3.</span> <span class="toc-text">3. 实现放大镜</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'xxxx',
+      conf: 'xxxxxxxxx'
+    });
+  </script>
+</section>
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2019/09/26/FileAPI文件操作实战/" title="上一篇: FileAPI文件操作实战">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2019/09/26/canvas学习和滤镜实现/" title="下一篇: canvas学习和滤镜实现">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/09/26/ServiceWorker离线缓存实战/">ServiceWorker离线缓存实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/26/websocket学习和群聊实现/">websocket学习和群聊实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/26/FileAPI文件操作实战/">FileAPI文件操作实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/26/canvas离屏技术和放大镜实现/">canvas离屏技术和放大镜实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/26/canvas学习和滤镜实现/">canvas学习和滤镜实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/24/ES6/">ES6</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/24/TypeScript/">TypeScript</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/22/《JavaScript高级程序设计》读书笔记/">《JavaScript高级程序设计》读书笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/21/前端面试中常考的源码实现/">前端面试中常考的源码实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/19/正则表达式/">正则表达式</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/19/前端基础知识梳理-下/">前端基础知识梳理(下)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/19/前端基础知识梳理-上/">前端基础知识梳理(上)</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/10/前端切图命令/">前端切图命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/webpack-总结/">webpack-总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/重学前端-vue/">重学前端-vue</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/重学前端-js/">重学前端-js</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/重学前端-css/">重学前端-css</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/08/重学前端-html/">重学前端-html</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/09/01/你不知道的js/">你不知道的js</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/29/md语法/">md语法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/08/29/hello-world/">How to use hexo debloy blog</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+      <div class="footer-left">
+        &copy; 2019 Star Huang
+      </div>
+      <div class="footer-right">
+        <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a
+        ><a href="https://github.com/maochunguang" target="_blank">Blog</a> by
+        star Huang
+      </div>
+    </div>
+    
+    <div class="visit">
+      
+      <span id="busuanzi_container_site_pv" style="display:none">
+        <span id="site-visit"
+          >极客到访数:
+          <span id="busuanzi_value_site_uv"></span>
+        </span>
+      </span>
+       
+      <span>, </span>
+       
+      <span id="busuanzi_container_page_pv" style="display:none">
+        <span id="page-visit"
+          >本页阅读量:
+          <span id="busuanzi_value_page_pv"></span>
+        </span>
+      </span>
+      
+    </div>
+    
+  </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 1;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'xxxxx', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?xxxxxx";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
